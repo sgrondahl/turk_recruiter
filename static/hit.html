@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/static/js/underscore.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/autoexpand.js"></script>
+    <script src="/static/js/mixins.js"></script>
+    <script src="/static/js/simplemodels.js?cache=2222"></script>
+    <script src="/static/js/hit.js"></script>
+    <style>
+      .help {
+      margin-left: 2em;
+      display: inline-block;
+      height: 16px;
+      width: 16px;
+      border: 1px solid #999;
+      text-align: center;
+      line-height: 16px;
+      font-size: 12px;
+      border-radius: 14px;
+      font-family: sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      background: #999;
+      color: #fff;
+      }
+      .help:hover {
+      background: #6c6;
+      border-color: #6c6;
+      }
+
+      .popover-content {
+      font-weight: normal !important;
+      }
+
+      .centering {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      text-align: center;
+      }
+      #hit-content {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-y: hidden;
+      }
+      #hit-content iframe {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      border-style: none;
+      }
+      div.content-main {
+      position: absolute; top: 0; left: 0; height: 100%; width: 100%;
+      background: #fff;
+      }
+      .ctype-when-visible legend {
+      padding-top: 4px;
+      }
+      ul.question-display-container * label {
+      margin-bottom: 0px;
+      }
+      div.ctype-when-hidden {
+      border-style: solid;
+      border-width: 1px;
+      margin-left: -4px;
+      padding-left: 3px;
+      margin-right: -4px;
+      padding-right: 3px;
+      border-color: #aaa;
+      background: #f3f3f3;
+      margin-bottom: 3px;
+      cursor: pointer;
+      overflow: hidden;
+      }
+      div.ctype-when-hidden:hover {
+      border-color: #666;
+      }
+      div.ctype-when-hidden legend {
+      border-width: 0px;
+      color: #333;
+      margin-bottom: 0;
+      }
+      div.ctype-when-hidden .ellipses {
+      cursor: pointer;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #aaa;
+      margin: -2px;
+      margin-left: 2px;
+      padding: 1px;
+      color: #aaa;
+      }
+      div.ctype-when-hidden .ellipses:hover {
+      border-color: #666;
+      color: #666;
+      }
+      div.ctype-completion {
+      display: inline-block;
+      float: right;
+      clear: none;
+      height: 1em;
+      font-size: 80%;
+      color: #666;
+      margin: 3px 4px 0 0;
+      position: relative;
+      }
+      .question-display-container li {
+      margin: -3px;
+      padding:  3px;
+      }
+      .question-display-container li.question-invalid {
+      background: #fee;
+      }
+      .hit-progress-indicator {
+      position:absolute;
+      right:2em;
+      bottom:0;
+      padding: 5px !important;
+      background:#ccc;
+      padding: 1px 6px 0 6px;
+      border-style: solid;
+      border-width: 1px 1px 0 1px;
+      border-color: #fff;
+      }
+      .hit-progress-indicator > div {
+      display: inline;
+      }
+      div.radio {
+      margin-left: 1px;
+      }
+      table.radio-table {
+      margin-top: 10px;
+      border-style: none;
+      }
+      table.radio-table td {
+      padding-right: 10px;
+      text-align: center;
+      }
+      table.radio-table th {
+      padding-right: 10px;
+      text-align: center;
+      }
+      table.radio-table * label {
+      font-weight: normal;
+      }
+      div.border-kludge {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -box-sizing: border-box;
+      border-style:solid;border-width:0 0 0 4px; border-color: #ccc;
+      }
+      #ping-error, #other-error {
+      margin: 1em auto 2em auto;
+      background: #FEDF00;
+      font-weight: bold;
+      text-align: center;
+      padding: 1em;
+      width: 90%;
+      border: 3px solid #CE2029;
+      border-radius: 5px;
+      }
+
+      #validation-error, #unknown-error {
+      margin: 2em auto 2em auto;
+      background: #FEDF00;
+      font-weight: bold;
+      text-align: center;
+      padding: 1em;
+      width: 90%;
+      border: 3px solid #CE2029;
+      border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <div class="header-title abs-center"><h3>News Crowdsourcer v1.0</h3></div>
+    </div>
+    <div class="loading-holder narrow-center">
+      <div style="margin: 40px;">
+	      <img src="/static/img/ajax-loader.gif" class="centering" /><br><br>
+	      <p class="centering">Loading HIT...</p>
+	      <p class="centering">It may take up to 1 minute to retrieve this HIT.</p>
+      </div>
+    </div>
+    <div class="login-content narrow-center" style="display:none;">
+      <form id="worker-login-form">
+	      <h4> Please input your worker id to ensure you are paid upon completing this HIT.</h4>
+	      <p> It is important that your worker id is input correctly. If you don't know your worker id, <a href="https://www.mturk.com/mturk/dashboard"> you can find it here. </a> )</p>
+	      <div class="input-group">
+	        <input type="text" class="form-control" placeholder="Worker ID" />
+	        <span class="input-group-btn">
+            <button id="worker-login-submit" class="btn btn-success" type="submit">Begin HIT</button>
+	        </span>
+	      </div>
+      </form>
+    </div>
+    <div class="content-main" style="display:none;">
+      <div class="clear-header splitscreen-full">
+	      <div id="hit-content" class="splitscreen-content"></div>
+      </div>
+      <div class="clear-header splitscreen-full border-kludge">
+	      <div id="hit-modules-scroll" class="splitscreen-content" style="">
+          <div id="ping-error" style="display:none;">You have lost contact with the server.  Please check your Internet connection.</div>
+	        <ul id="hit-modules"></ul><br>
+	        <button id="next-task-button" class="btn btn-success">Continue to next task</button>
+          <div id="validation-error" style="display:none;">Your response was missing data.  Please refresh this page and complete the task again.  We apologize for the inconvenience.</div>
+          <div id="other-error" style="display:none;"></div>
+          <div id="unknown-error" style="display:none;">Something went wrong submitting your responses.  Please try submitting them again.</div>
+	        <div class="hit-progress-indicator">
+	          <div id="hit-progress">Progress</div>&nbsp;&nbsp;
+	          <button id="return-hit" class="btn btn-danger">Return HIT</button>
+	        </div>
+	      </div>
+      </div>
+    </div>
+    <div class="turk-verify-content narrow-center" style="display: none;">
+      <h4> Thanks for completing this HIT! </h4>
+      <p> You should now return to mturk and submit the following code to receive payment: </p>
+      <div class="well inner-hor-center">
+	      <h4 class="secret-code"></h4>
+      </div>
+    </div>
+    <div class="turk-no-hits narrow-center" style="display:none;">
+      <h4> No HITs. </h4>
+      <p> Sorry, you are not eligible for this HIT. </p>
+    </div>
+
+    <!-- begin underscore templates -->
+
+    <script type="text/template" id="ctype-display-template">
+      <form>
+	      <div class="ctype-when-hidden">
+	        <legend>
+	          <div class="ctype-completion"><span data-prop="numCompleted">0</span>/<span data-prop="numQuestions">3</span> completed</div>
+	          <span data-prop="header"></span> <span class="ellipses">...</span>
+	        </legend>
+	      </div>
+
+	      <fieldset class="ctype-when-visible">
+	        <legend data-prop="header"></legend>
+	        <ul class="question-display-container"></ul>
+	      </fieldset>
+      </form>
+    </script>
+
+    <script type="text/template" id="numericquestion-display-template">
+      <div class="form-group">
+	      <label> 
+	        <%= questiontext %> 
+	        <% if (helptext) { %><div class="help">?</div><% } %>
+	      </label>
+	      <input class="form-control" type="number" name="<%= varname %>"/>
+      </div>
+    </script>
+
+    <script type="text/template" id="textquestion-display-template">
+      <div class="form-group">
+	      <label> 
+	        <%= questiontext %> 
+	        <% if (helptext) { %><div class="help">?</div><% } %>
+	      </label>
+	      <textarea class="form-control" name="<%= varname %>"></textarea>
+      </div>
+    </script>
+    
+    <script type="text/template" id="catquestion-display-template">
+      <div class="form-group">
+	      <label> 
+	        <%= questiontext %> 
+	        <% if (helptext) { %><div class="help">?</div><% } %>
+	      </label>
+	      <% _.each(content, function(choice) { %> <div class="radio"><label><input type="radio" name="<%= varname %>" value="<%= choice.value %>"/><%= choice.text %></label></div> <% }); %>
+      </div>
+    </script>
+    
+    <script type="text/template" id="catquestionsideways-display-template">
+      <div class="form-group">
+	      <label> <%= questiontext %> </label>
+	      <table class="radio-table">
+	        <tr>
+	          <% if (options.lowLabel) { %><th></th><% } %>
+	          <% _.each(content, function(choice) { %>
+	          <th><label for="<%= varname + "_" + choice.value %>"><%= choice.text %></label></th>
+	          <% }); %>
+	          <% if (options.highLabel) { %><th></th><% } %>
+	          <% if (options.outsideCategories) { %>
+	          <th><div style="display: block; width: 2em;"></div></th>
+	          <% _.each(options.outsideCategories, function(cat) { %><th><label for="<%= varname + "_" + cat %>"><%= cat %></label></th><% }); %>
+	          <% } %>
+	        </tr>
+	        <tr>
+	          <% if (options.lowLabel) { %><td><%= options.lowLabel %></td><% } %>
+	          <% _.each(content, function(choice) { %>
+  	        <td><input id="<%= varname + "_" + choice.value %>" type="radio" name="<%= varname %>" value="<%= choice.value %>"/></td>
+	          <% }); %>
+	          <% if (options.highLabel) { %><td><%= options.highLabel %></td><% } %>
+	          <% if (options.outsideCategories) { %>
+	          <th><div style="display: block; width: 2em;"></div></th>
+	          <% _.each(options.outsideCategories, function(cat) { %>
+  	        <td><input id="<%= varname + "_" + cat %>" type="radio" name="<%= varname %>" value="<%= cat %>"/></td>
+	          <% }); %>
+	          <% } %>
+	        </tr>
+      </div>
+    </script>
+
+    <script type="text/template" id="catquestionsnested-display-template">
+      <% if (n <= 1) { %> <label> <%= questiontext %> </label> <% } %>
+         <% var hidden = n > 1 ? 'style="display:none;"' : ''; %>
+	    <div class="form-group" nesting-level="<%= n %>" <%= hidden %>>
+	      <% for (choice in content) { %> 
+	      <%     if (choice === '__val__') continue; %>
+	      <%     var val = content[choice].hasOwnProperty('__val__') ? content[choice]['__val__'] : ''; %>
+	      <div class="radio">
+	        <label>
+	          <input type="radio" nesting-level="<%= n %>" name="<%= '__' + varname + '__' + n %>" value="<%= val %>"/><%= choice %>
+	        </label>
+	        <% if (!content[choice].hasOwnProperty('__val__')) { %>
+	        <%= generator(content[choice], template, n, questiontext, varname) %>
+	        <% } %>
+	      </div> 
+	      <% } %>
+	    </div>
+    </script>
+
+  </body>
+</html>

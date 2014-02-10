@@ -1,0 +1,136 @@
+.clearfix:before, .clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.inner-hor-center {
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+}
+
+div.splitscreen {
+    margin: 2em;
+    width: 40%;
+    display: inline-block;
+    float: left;
+}
+
+div.splitscreen.smaller {
+    width: 30%;
+}
+
+div.splitscreen.bigger {
+    width: 50%;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 0;
+}
+
+ul.pretty-list {
+    width: 100%;
+}
+
+ul.pretty-list > * {
+    width: 100%;
+    text-align: center;
+}
+
+ul.pretty-list > li {
+    font: 200 1.2em/1.5 Helvetica, Verdana, sans-serif;
+    border-bottom: 1px solid #ccc;
+    height: 40px;
+    vertical-align: middle;
+    line-height: 40px;
+}
+
+ul.pretty-list > li:last-child {
+    border: none;
+}
+
+ul.pretty-list > li > a {
+    text-decoration: none;
+    text-align: center;
+    color: #000;
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: font-size 0.1s ease, background-color 0.3s ease;
+    -moz-transition: font-size 0.1s ease, background-color 0.3s ease;
+    -o-transition: font-size 0.1s ease, background-color 0.3s ease;
+    -ms-transition: font-size 0.1s ease, background-color 0.3s ease;
+    transition: font-size 0.1s ease, background-color 0.3s ease;
+}
+
+ul.pretty-list > li > a:hover {
+    font-size: 1.4em;
+    background: #f6f6f6;
+    color: green;
+}
+
+html,body {
+    font-family: Helvetica, Verdana, sans-serif;
+}
+
+div.header-container {
+/*    position: fixed; */
+    width: 100%;
+    height: 60px;
+    background-color: #EEEEEE;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+}
+
+div.abs-center {
+    position: absolute;
+    left: 50%;
+}
+
+div.header-title.abs-center {
+    width: 400px;
+    text-align: center;
+    margin-left: -200px;
+}
+
+div.header-push {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 60px;
+}
+
+div.splitscreen-full {
+    padding: 0;
+    margin: 0;
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    float: left;
+}
+
+div.splitscreen-content {
+    padding: 2em;
+    overflow-y: auto;
+    max-height: 100%;
+    z-order: 2;
+}
+
+div.clear-header {
+margin-top: 60px;
+margin-top: 0;
+}
+
+div.narrow-center {
+    width: 400px;
+    margin: 10px auto;
+}

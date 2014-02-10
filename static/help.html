@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/static/js/marked.js"></script>
+    <script type="text/javascript">
+      $(function() {
+	  marked.setOptions({
+	      gfm : true
+	  });
+	  $.get('/help/README.md', function(data) {
+	      marked(data, function (err, content) {
+		  if (err) throw err;
+		  $('body').html(content);
+	      });
+	  });
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
